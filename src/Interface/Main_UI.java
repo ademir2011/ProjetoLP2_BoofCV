@@ -57,13 +57,6 @@ public class Main_UI extends javax.swing.JFrame {
 
         jPanel1_buttons = new javax.swing.JPanel();
         btSegmentar_mdUI = new javax.swing.JButton();
-        btRotular_mdUI = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
         btSair_mdUI = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -71,9 +64,9 @@ public class Main_UI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1_buttons.setLayout(new java.awt.GridLayout(3, 3));
+        jPanel1_buttons.setLayout(new java.awt.GridLayout(1, 2));
 
-        btSegmentar_mdUI.setText("Segmentar");
+        btSegmentar_mdUI.setText("Segmentar/Modular");
         btSegmentar_mdUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSegmentar_mdUIActionPerformed(evt);
@@ -81,33 +74,12 @@ public class Main_UI extends javax.swing.JFrame {
         });
         jPanel1_buttons.add(btSegmentar_mdUI);
 
-        btRotular_mdUI.setText("Rotular");
-        btRotular_mdUI.addActionListener(new java.awt.event.ActionListener() {
+        btSair_mdUI.setText("Sair");
+        btSair_mdUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRotular_mdUIActionPerformed(evt);
+                btSair_mdUIActionPerformed(evt);
             }
         });
-        jPanel1_buttons.add(btRotular_mdUI);
-
-        jButton7.setText("jButton7");
-        jPanel1_buttons.add(jButton7);
-
-        jButton5.setText("jButton5");
-        jPanel1_buttons.add(jButton5);
-
-        jButton4.setText("jButton4");
-        jPanel1_buttons.add(jButton4);
-
-        jButton3.setText("jButton3");
-        jPanel1_buttons.add(jButton3);
-
-        jButton6.setText("jButton6");
-        jPanel1_buttons.add(jButton6);
-
-        jButton8.setText("jButton8");
-        jPanel1_buttons.add(jButton8);
-
-        btSair_mdUI.setText("Sair");
         jPanel1_buttons.add(btSair_mdUI);
 
         getContentPane().add(jPanel1_buttons, java.awt.BorderLayout.CENTER);
@@ -123,6 +95,18 @@ public class Main_UI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Sai do programa
+     * @param evt 
+     */
+    private void btSair_mdUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSair_mdUIActionPerformed
+        dispose();
+    }//GEN-LAST:event_btSair_mdUIActionPerformed
+    
+    /**
+     * Chama o frame do botão slecionado
+     * @param evt 
+     */
     private void btSegmentar_mdUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSegmentar_mdUIActionPerformed
         ModuleSegmantation mdSeg = new ModuleSegmantation(this, true);
         mdSeg.setTitle("Segmentacao");
@@ -130,14 +114,6 @@ public class Main_UI extends javax.swing.JFrame {
         mdSeg.setResizable(false);
         mdSeg.setVisible(true);
     }//GEN-LAST:event_btSegmentar_mdUIActionPerformed
-
-    private void btRotular_mdUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRotular_mdUIActionPerformed
-        ModuleLabeled mdLab = new ModuleLabeled(this, true);
-        mdLab.setTitle("Rotulacao");
-        mdLab.setLocationRelativeTo(null);
-        mdLab.setResizable(false);
-        mdLab.setVisible(true);
-    }//GEN-LAST:event_btRotular_mdUIActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,15 +134,8 @@ public class Main_UI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btRotular_mdUI;
     private javax.swing.JButton btSair_mdUI;
     private javax.swing.JButton btSegmentar_mdUI;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

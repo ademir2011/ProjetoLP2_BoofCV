@@ -48,60 +48,25 @@
       </Constraints>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-        <Property name="columns" type="int" value="3"/>
-        <Property name="rows" type="int" value="3"/>
+        <Property name="columns" type="int" value="2"/>
+        <Property name="rows" type="int" value="1"/>
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JButton" name="btSegmentar_mdUI">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Segmentar"/>
+            <Property name="text" type="java.lang.String" value="Segmentar/Modular"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSegmentar_mdUIActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btRotular_mdUI">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Rotular"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRotular_mdUIActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton7">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton7"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton5">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton5"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton4"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton3">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton3"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton6">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton6"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton8">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton8"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btSair_mdUI">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sair"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSair_mdUIActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

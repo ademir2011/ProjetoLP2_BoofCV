@@ -5,22 +5,12 @@
  */
 package Funcoes;
 
-import boofcv.alg.filter.binary.BinaryImageOps;
-import boofcv.core.image.ConvertBufferedImage;
-import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.io.image.UtilImageIO;
-import boofcv.struct.ConnectRule;
-import boofcv.struct.image.ImageSInt32;
-import boofcv.struct.image.ImageUInt8;
 import br.ufrn.imd.lp2.imagesegmentation.ImageInformation;
 import br.ufrn.imd.lp2.imagesegmentation.ImageSegmentation;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,28 +18,62 @@ import javax.swing.JOptionPane;
  * @author Ademir e Leonardo
  */
 public class Segmantation {
+    
+    private float blurlevel;
+    private float colorradius;
+    private float minsize;
+    private int totalregioes;
+    BufferedImage image_origin;
+    BufferedImage image_seg;
+    BufferedImage image_map;
+    ImageInformation seg;
 
+    /**
+     * Inicilização da segmentação com valores default
+     */
     public Segmantation() {
-
+        this.blurlevel = 0.99f;
+        this.colorradius = 40f;
+        this.minsize = 1000f;
+        this.totalregioes = 0;
+        this.seg = null;
     }
-
+    
+    /**
+     * Polimorfismo de método para aquele que chamar só caminho ou setando valores
+     * @param caminho
+     * @return 
+     */
     public BufferedImage segmentar_imagem(String caminho) {
-
-        // Segmentação com parâmetros 0.99, 40 e 1000
-        ImageInformation seg = null;
-        BufferedImage image_origin = UtilImageIO.loadImage(caminho);
-        BufferedImage image_seg = UtilImageIO.loadImage(caminho);
-        BufferedImage image_map = UtilImageIO.loadImage(caminho);
+        return segmentar_imagem(caminho, this.blurlevel, this.colorradius, this.minsize);
+    }
+    
+    /**
+     * nesse polimorfismo é setado valores do blurlevel, colorradius e minsize
+     * tem a função de segmentar a imagem de acordo com os valores passados
+     * @param caminho
+     * @param blurlevel
+     * @param colorradius
+     * @param minsize
+     * @return 
+     */
+    public BufferedImage segmentar_imagem(String caminho, float blurlevel, float colorradius, float minsize) {
+        
+        this.blurlevel = blurlevel;
+        this.colorradius = colorradius;
+        this.minsize = minsize;
+        this.image_origin = UtilImageIO.loadImage(caminho);
+        this.image_seg = UtilImageIO.loadImage(caminho);
 
         try {
 
             // Segmentação com parâmetros 0.99, 40 e 1000 < default
-            seg = ImageSegmentation.performSegmentation(caminho, 0.99, 40, 1000);
+            seg = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
 
             // Impressão na tela da quantidade de regiões gerada
             System.out.println("Total de regiões imagem segmentada: " + seg.getTotalRegions());
+            this.totalregioes = seg.getTotalRegions();
             
-            image_origin = seg.getOriginalImage(); // Imagem original
             image_seg = seg.getRegionMarkedImage(); // Imagem segmentada
 
         } catch (Exception e) {
@@ -59,26 +83,54 @@ public class Segmantation {
         return image_seg;
     }
     
-    public BufferedImage rotular_imagem(String caminho){
+    /**
+     * Método para fazer a rotulação da imagem de acordo com os valores setados
+     * @param caminho
+     * @param blurlevel
+     * @param colorradius
+     * @param minsize
+     * @return 
+     */
+    public BufferedImage rotular_imagem(String caminho, float blurlevel, float colorradius, float minsize){
         
-        // Segmentação com parâmetros 0.99, 40 e 1000
-        ImageInformation seg = null;
-        BufferedImage image_origin = UtilImageIO.loadImage(caminho);
-        BufferedImage image_map = UtilImageIO.loadImage(caminho);
-    
+        this.blurlevel = blurlevel;
+        this.colorradius = colorradius;
+        this.minsize = minsize;
+        this.image_origin = UtilImageIO.loadImage(caminho);
+        this.image_map = UtilImageIO.loadImage(caminho);
+        System.out.println("teste");
         try {
 
-            // Segmentação com parâmetros 0.99, 40 e 1000
-            seg = ImageSegmentation.performSegmentation(caminho, 0.99, 40, 1000);
+            
+            seg = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
+            image_map = seg.getRegionMarkedImage(); // Imagem segmentada
             
             // Impressão na tela da quantidade de regiões gerada
             System.out.println("Total de regiões: " + seg.getTotalRegions());
+            totalregioes = seg.getTotalRegions();
             
             //image_origin = seg.getOriginalImage(); // Imagem original
 
             int region_map[] = seg.getSegmentedImageMap(); // retorna mapa de regioes [0_N] da segmentacao
 
-            int tonalidades_cinza[] = new int[]{10,20,30,40,50,60,70,100,120,130,150,160,170,200,210,230,235,250,250,255};
+            int tonalidades_cinza[] = new int[totalregioes];
+            
+            Random r = new Random();
+            
+            for (int i = 0; i < totalregioes; i++) {
+                tonalidades_cinza[i] = r.nextInt(255);
+                System.out.print(" "+tonalidades_cinza[i]);
+            }
+            
+            for (int i = 0; i < totalregioes; i++) {
+                for (int j = i+1; j < totalregioes; j++) {
+                    if(tonalidades_cinza[i] == tonalidades_cinza[j]){
+                        System.out.println("existe um valor igual v"+"["+j+"]");
+                        tonalidades_cinza[j] = r.nextInt(255);
+                    }
+                }
+            }
+            
             int cont = 0;
             for (int i = 0; i < image_map.getHeight(); i++) {
                 for (int j = 0; j < image_map.getWidth(); j++) {
@@ -95,4 +147,39 @@ public class Segmantation {
         return image_map;
     }
 
+    public float getBlurlevel() {
+        return blurlevel;
+    }
+
+    public void setBlurlevel(float blurlevel) {
+        this.blurlevel = blurlevel;
+    }
+
+    public float getColorradius() {
+        return colorradius;
+    }
+
+    public void setColorradius(float colorradius) {
+        this.colorradius = colorradius;
+    }
+
+    public float getMinsize() {
+        return minsize;
+    }
+
+    public void setMinsize(float minsize) {
+        this.minsize = minsize;
+    }
+
+    public int getTotalregioes() {
+        return totalregioes;
+    }
+
+    public void setTotalregioes(int totalregioes) {
+        this.totalregioes = totalregioes;
+    }
+    
+    
+    
+    
 }

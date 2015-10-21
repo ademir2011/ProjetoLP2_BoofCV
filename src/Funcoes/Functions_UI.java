@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,21 +35,41 @@ public class Functions_UI {
         if (result_fc == JFileChooser.APPROVE_OPTION) {
             System.out.println("File choose susseful!");
             return fc.getSelectedFile();
+        } else if (result_fc == JFileChooser.CANCEL_OPTION) {
+            System.out.println("Operacao cancelada com sucesso");
         } else {
             JOptionPane.showConfirmDialog(null, "Error");
         }
         return null;
     }
     
-    public void tratamento_de_erro_table(JTable tbCaminho_mdX){
+    public boolean tratamento_de_erro_carregamento(DefaultTableModel model, String selectedFile){
+        if(model.getRowCount() > 25) {
+            JOptionPane.showMessageDialog(null, "Voce atingiu o numero maximo de imagens");
+            return false;
+        }
+        
+        for (String key : file_list) {
+            if(selectedFile.equals(key)){
+                JOptionPane.showMessageDialog(null, "Arquivo ja existente, escolha outro !");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean tratamento_de_erro_table(JTable tbCaminho_mdX){
         if(tbCaminho_mdX.getSelectedRow()==-1){
             if(tbCaminho_mdX.getRowCount() == 0){
-                JOptionPane.showConfirmDialog(null, "Tabela vazia !");
+                JOptionPane.showMessageDialog(null, "Nenhuma imagem selecionada");
+                return false;
             } else {
-                JOptionPane.showConfirmDialog(null, "Voce nao selecionou algum arquivo");
+                JOptionPane.showMessageDialog(null, "Voce nao selecionou algum arquivo");
+                return false;
             }
         } else {
             System.out.println("Nenhum erro encontrado");
+            return true;
         }
     }
     
@@ -57,7 +78,7 @@ public class Functions_UI {
         int x = lbImgSeg_mdX.getSize().width;
         int y = lbImgSeg_mdX.getSize().height;
         int ix = image_buff.getWidth();
-        int iy = image_buff.getWidth();
+        int iy = image_buff.getHeight();
         int dx = 0;
         int dy = 0;
         if (x / y > ix / iy){
