@@ -6,48 +6,54 @@
 package Interface;
 
 import Funcoes.Functions_UI;
-import Funcoes.Segmantation;
-import java.awt.Cursor;
+import Funcoes.TaskSegmentation;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Ademir
  */
-public class ModuleSegmantation extends javax.swing.JDialog {
+public class ModuleSegmantation_UI extends javax.swing.JDialog {
     
     Functions_UI function;
-    DefaultTableModel model;
-    Segmantation seg;
+    DefaultTableModel model_table;
+    DefaultListModel model_list; 
+    TaskSegmentation seg;
     File selectedFile;
     private float blurlevel;
     private float colorradius;
     private float minsize;
+    private boolean ativar_anotacao = false;
     
     /**
      * Creates new form ModuleSegmantation
      */
-    public ModuleSegmantation(java.awt.Frame parent, boolean modal) {
+    public ModuleSegmantation_UI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         
         initComponents();
         this.function = new Functions_UI();
-        this.model = (DefaultTableModel) tbCaminho_mdSeg.getModel();
+        this.model_table = (DefaultTableModel) tbCaminho_mdSeg.getModel();
+        this.model_list = new DefaultListModel();
+        jList_notes.setModel(model_list);
         this.blurlevel = Float.parseFloat(JSpBluLev_mdSeg.getValue().toString());
         this.colorradius = Float.parseFloat(JSpColRad_mdSeg.getValue().toString());
         this.minsize = Float.parseFloat(JSpMinSiz_mdSeg.getValue().toString());
-        seg = new Segmantation();
+        seg = new TaskSegmentation();
+        
+         
     }
 
     /**
@@ -80,6 +86,11 @@ public class ModuleSegmantation extends javax.swing.JDialog {
         JSpMinSiz_mdSeg = new javax.swing.JSpinner();
         JLTotReg_mdSeg = new javax.swing.JLabel();
         jPb_mdSeg = new javax.swing.JProgressBar();
+        jPainel_Notes = new javax.swing.JPanel();
+        jTfNotes = new javax.swing.JTextField();
+        btAddNotes = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList_notes = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -156,6 +167,7 @@ public class ModuleSegmantation extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tbCaminho_mdSeg.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbCaminho_mdSeg.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbCaminho_mdSegMouseClicked(evt);
@@ -181,13 +193,13 @@ public class ModuleSegmantation extends javax.swing.JDialog {
         );
         jPImages_mdSegLayout.setVerticalGroup(
             jPImages_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 411, Short.MAX_VALUE)
             .addGroup(jPImages_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPImages_mdSegLayout.createSequentialGroup()
                     .addGroup(jPImages_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lbImgOri_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                        .addComponent(lbImgSeg_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
-                    .addContainerGap(22, Short.MAX_VALUE)))
+                        .addComponent(lbImgOri_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                        .addComponent(lbImgSeg_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         JLblurlb_mdSeg.setText("BlurLevel");
@@ -232,12 +244,11 @@ public class ModuleSegmantation extends javax.swing.JDialog {
                     .addComponent(JLMinSiz_mdSeg)
                     .addComponent(JLblurlb_mdSeg)
                     .addComponent(JLColRad_mdSeg))
-                .addGroup(JPupd_info_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JSpMinSiz_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(JPupd_info_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(JSpBluLev_mdSeg, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(JSpColRad_mdSeg, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addGroup(JPupd_info_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JSpMinSiz_mdSeg)
+                    .addComponent(JSpColRad_mdSeg)
+                    .addComponent(JSpBluLev_mdSeg))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         JPupd_info_mdSegLayout.setVerticalGroup(
             JPupd_info_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,66 +272,109 @@ public class ModuleSegmantation extends javax.swing.JDialog {
 
         jPb_mdSeg.setStringPainted(true);
 
+        jPainel_Notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Anotações", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.ABOVE_TOP));
+
+        btAddNotes.setText("+");
+        btAddNotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAddNotesActionPerformed(evt);
+            }
+        });
+
+        jList_notes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(jList_notes);
+
+        javax.swing.GroupLayout jPainel_NotesLayout = new javax.swing.GroupLayout(jPainel_Notes);
+        jPainel_Notes.setLayout(jPainel_NotesLayout);
+        jPainel_NotesLayout.setHorizontalGroup(
+            jPainel_NotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPainel_NotesLayout.createSequentialGroup()
+                .addComponent(jTfNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btAddNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPainel_NotesLayout.setVerticalGroup(
+            jPainel_NotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPainel_NotesLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPainel_NotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTfNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAddNotes)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPb_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JPupd_info_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addComponent(JPupd_info_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jPainel_Notes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)))
                 .addComponent(jPb_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
-                    .addComponent(JPupd_info_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(JPupd_info_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPainel_Notes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void brCarImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brCarImg_mdSegActionPerformed
         //Obtendo caminho das imagens e armazenando no arraylist  
         if((selectedFile = function.open_filechoose()) != null){
-            if(function.tratamento_de_erro_carregamento(model, selectedFile.getAbsolutePath())){
+            if(function.tratamento_de_erro_carregamento(model_table, selectedFile.getAbsolutePath())){
                 function.file_list.add(selectedFile.getAbsolutePath());
                 System.out.println(""+function.file_list);
                 //Adicionando caminhos das imagens na tabela
-                model.addRow(new Object[]{selectedFile.getAbsolutePath()});
+                model_table.addRow(new Object[]{selectedFile.getAbsolutePath()});
             }
         }
     }//GEN-LAST:event_brCarImg_mdSegActionPerformed
 
     private void btSegImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSegImg_mdSegActionPerformed
+        
         jPb_mdSeg.setValue(0);
-                
+        
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
-            String caminho = model.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
+            String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
             BufferedImage image_buff = seg.segmentar_imagem(caminho, blurlevel, colorradius, minsize);
             
-            lbImgSeg_mdSeg.setIcon(function.image_resize(image_buff, lbImgSeg_mdSeg));
-
+            function.setarImageLabel(lbImgSeg_mdSeg, image_buff);
+            
             JLTotReg_mdSeg.setText("Total de regioes: "+seg.getTotalregioes());
             
             jPb_mdSeg.setValue(100);
+            
+            ativar_anotacao = true;
+            
+            //funções que irão rodar constantemente
+            seg.ativa_selecao(lbImgSeg_mdSeg);
+            
         }
     }//GEN-LAST:event_btSegImg_mdSegActionPerformed
 
@@ -332,17 +386,17 @@ public class ModuleSegmantation extends javax.swing.JDialog {
       
         function.tratamento_de_erro_table(tbCaminho_mdSeg);
         
-        String caminho = model.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
+        String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
         
         BufferedImage image_buff = null;
         
         try {
             image_buff = ImageIO.read(new File(caminho));
         } catch (IOException ex) {
-            Logger.getLogger(ModuleSegmantation.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        lbImgOri_mdSeg.setIcon(function.image_resize(image_buff, lbImgOri_mdSeg));
+        function.setarImageLabel(lbImgOri_mdSeg, image_buff);
     }//GEN-LAST:event_tbCaminho_mdSegMouseClicked
 
     private void btSalImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalImg_mdSegActionPerformed
@@ -368,7 +422,7 @@ public class ModuleSegmantation extends javax.swing.JDialog {
     private void btTirIma_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTirIma_mdSegActionPerformed
         
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
-            String caminho_remove = model.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
+            String caminho_remove = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
             int cont = 0;
             for(String key : function.file_list){
                 if(key.equals(caminho_remove)){
@@ -385,17 +439,35 @@ public class ModuleSegmantation extends javax.swing.JDialog {
         jPb_mdSeg.setValue(0);
                 
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
-            String caminho = model.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
+            String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
             BufferedImage image_buff = seg.rotular_imagem(caminho, blurlevel, colorradius, minsize);
             
-            lbImgSeg_mdSeg.setIcon(function.image_resize(image_buff, lbImgSeg_mdSeg));
+            function.setarImageLabel(lbImgSeg_mdSeg, image_buff);
 
             JLTotReg_mdSeg.setText("Total de regioes: "+seg.getTotalregioes());
             
             jPb_mdSeg.setValue(100);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btAddNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddNotesActionPerformed
+        
+        if(function.tratamento_de_erro_list(jTfNotes, ativar_anotacao)){
+            if(lbImgSeg_mdSeg.getIcon().equals(seg.getImageicon_image_clareada())){
+                String textToNote = jTfNotes.getText();
+                function.list_list.add(textToNote);
+                model_list.add(model_list.getSize(), textToNote);
+                seg.module_notes();
+                System.out.println(function.list_list.toString());
+            } else {
+                JOptionPane.showMessageDialog(null, "Rotulo nao selecionado!");
+            }
+        }
+        
+        jTfNotes.setText("");
+        
+    }//GEN-LAST:event_btAddNotesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,20 +486,21 @@ public class ModuleSegmantation extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ModuleSegmantation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ModuleSegmantation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ModuleSegmantation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ModuleSegmantation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ModuleSegmantation dialog = new ModuleSegmantation(new javax.swing.JFrame(), true);
+                ModuleSegmantation_UI dialog = new ModuleSegmantation_UI(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -449,15 +522,20 @@ public class ModuleSegmantation extends javax.swing.JDialog {
     private javax.swing.JSpinner JSpColRad_mdSeg;
     private javax.swing.JSpinner JSpMinSiz_mdSeg;
     private javax.swing.JButton brCarImg_mdSeg;
+    private javax.swing.JButton btAddNotes;
     private javax.swing.JButton btSalImg_mdSeg;
     private javax.swing.JButton btSegImg_mdSeg;
     private javax.swing.JButton btTirIma_mdSeg;
     private javax.swing.JButton btVoltar_mdSeg;
     private javax.swing.JButton jButton1;
+    private javax.swing.JList jList_notes;
     private javax.swing.JPanel jPImages_mdSeg;
+    private javax.swing.JPanel jPainel_Notes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jPb_mdSeg;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTfNotes;
     private javax.swing.JLabel lbImgOri_mdSeg;
     private javax.swing.JLabel lbImgSeg_mdSeg;
     private javax.swing.JTable tbCaminho_mdSeg;

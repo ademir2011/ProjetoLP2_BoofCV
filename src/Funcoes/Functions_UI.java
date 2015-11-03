@@ -5,14 +5,18 @@
  */
 package Funcoes;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,13 +26,14 @@ import javax.swing.table.DefaultTableModel;
 public class Functions_UI {
     
     public ArrayList<String> file_list = new ArrayList<String>();
+    public ArrayList<String> list_list = new ArrayList<String>();
     
     public Functions_UI(){
     }
     
     public File open_filechoose(){
         JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("C:/Users/Ademir/Desktop/Images/"));
+        fc.setCurrentDirectory(new File("C:/Users/Ademir/Desktop/Images"));
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int result_fc = fc.showOpenDialog(fc);
         
@@ -73,23 +78,36 @@ public class Functions_UI {
         }
     }
     
-    public ImageIcon image_resize(BufferedImage image_buff, JLabel lbImgSeg_mdX){
+    public boolean tratamento_de_erro_list(JTextField jTfNotes, boolean ativar_anotacao){
         
+        if(ativar_anotacao == false) {
+            JOptionPane.showMessageDialog(null, "Nenhuma imagem segmentada");
+            return false;
+        } else if(jTfNotes.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Nenhum texto digitado");
+            return false;
+        }
+        
+        for(String key : list_list){
+            if(jTfNotes.getText().equals(key)){
+                JOptionPane.showMessageDialog(null, "Nome ja inserido");
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public ImageIcon image_resize(BufferedImage image_buff, JLabel lbImgSeg_mdX){
+       
         int x = lbImgSeg_mdX.getSize().width;
         int y = lbImgSeg_mdX.getSize().height;
-        int ix = image_buff.getWidth();
-        int iy = image_buff.getHeight();
-        int dx = 0;
-        int dy = 0;
-        if (x / y > ix / iy){
-            dy = y;
-            dx = dy * ix / iy;
-        } else {
-            dx = x;
-            dy = dx * iy / ix;
-        }
-
-        return (new ImageIcon(image_buff.getScaledInstance(dx, dy, image_buff.SCALE_SMOOTH)) );
+        
+        return (new ImageIcon(image_buff.getScaledInstance(x, y, image_buff.SCALE_SMOOTH)) );
+    }
+    
+    public void setarImageLabel(JLabel label, BufferedImage image_buff){
+        label.setIcon(new ImageIcon(image_buff));
     }
     
 }

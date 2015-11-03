@@ -5,7 +5,7 @@
  */
 package Interface;
 
-import Funcoes.Segmantation;
+import Funcoes.TaskSegmentation;
 import com.sun.javafx.scene.control.SelectedCellsMap;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -108,7 +108,7 @@ public class Main_UI extends javax.swing.JFrame {
      * @param evt 
      */
     private void btSegmentar_mdUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSegmentar_mdUIActionPerformed
-        ModuleSegmantation mdSeg = new ModuleSegmantation(this, true);
+        ModuleSegmantation_UI mdSeg = new ModuleSegmantation_UI(this, true);
         mdSeg.setTitle("Segmentacao");
         mdSeg.setLocationRelativeTo(null);
         mdSeg.setResizable(false);
