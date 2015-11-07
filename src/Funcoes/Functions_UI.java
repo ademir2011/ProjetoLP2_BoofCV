@@ -5,6 +5,8 @@
  */
 package Funcoes;
 
+import Classes.Rotulo;
+import DAO.RotuloDAO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -78,7 +80,7 @@ public class Functions_UI {
         }
     }
     
-    public boolean tratamento_de_erro_list(JTextField jTfNotes, boolean ativar_anotacao){
+    public boolean tratamento_de_erro_list(JTextField jTfNotes, boolean ativar_anotacao, ArrayList multiRM, RotuloDAO rotuloDAO){
         
         if(ativar_anotacao == false) {
             JOptionPane.showMessageDialog(null, "Nenhuma imagem segmentada");
@@ -91,6 +93,13 @@ public class Functions_UI {
         for(String key : list_list){
             if(jTfNotes.getText().equals(key)){
                 JOptionPane.showMessageDialog(null, "Nome ja inserido");
+                return false;
+            }
+        }
+        
+        for (Rotulo key : rotuloDAO.getRotulo_list()) {
+            if(key.getRegion_map_value().equals(multiRM)){
+                JOptionPane.showMessageDialog(null, "Regioes já selecionadas com o nome"+key.getNome());
                 return false;
             }
         }

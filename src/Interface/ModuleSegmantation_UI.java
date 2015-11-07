@@ -5,6 +5,8 @@
  */
 package Interface;
 
+import Classes.Rotulo;
+import DAO.RotuloDAO;
 import Funcoes.Functions_UI;
 import Funcoes.TaskSegmentation;
 import java.awt.event.MouseAdapter;
@@ -12,12 +14,15 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,10 +37,13 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
     DefaultListModel model_list; 
     TaskSegmentation seg;
     File selectedFile;
+    RotuloDAO rotuloDAO;
     private float blurlevel;
     private float colorradius;
     private float minsize;
     private boolean ativar_anotacao = false;
+    BufferedImage label_image;
+    
     
     /**
      * Creates new form ModuleSegmantation
@@ -52,7 +60,7 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
         this.colorradius = Float.parseFloat(JSpColRad_mdSeg.getValue().toString());
         this.minsize = Float.parseFloat(JSpMinSiz_mdSeg.getValue().toString());
         seg = new TaskSegmentation();
-        
+        rotuloDAO = new RotuloDAO();
          
     }
 
@@ -282,6 +290,11 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
         });
 
         jList_notes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList_notes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList_notesMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jList_notes);
 
         javax.swing.GroupLayout jPainel_NotesLayout = new javax.swing.GroupLayout(jPainel_Notes);
@@ -328,9 +341,7 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)))
+                    .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jPb_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -344,12 +355,10 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
     
     private void brCarImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brCarImg_mdSegActionPerformed
-        //Obtendo caminho das imagens e armazenando no arraylist  
         if((selectedFile = function.open_filechoose()) != null){
             if(function.tratamento_de_erro_carregamento(model_table, selectedFile.getAbsolutePath())){
                 function.file_list.add(selectedFile.getAbsolutePath());
                 System.out.println(""+function.file_list);
-                //Adicionando caminhos das imagens na tabela
                 model_table.addRow(new Object[]{selectedFile.getAbsolutePath()});
             }
         }
@@ -357,24 +366,18 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
 
     private void btSegImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSegImg_mdSegActionPerformed
         
-        jPb_mdSeg.setValue(0);
-        
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+            
             String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
-
+            
             BufferedImage image_buff = seg.segmentar_imagem(caminho, blurlevel, colorradius, minsize);
             
-            function.setarImageLabel(lbImgSeg_mdSeg, image_buff);
-            
-            JLTotReg_mdSeg.setText("Total de regioes: "+seg.getTotalregioes());
-            
-            jPb_mdSeg.setValue(100);
-            
+            function.setarImageLabel(lbImgSeg_mdSeg, seg.getSegmented_image());
+           
             ativar_anotacao = true;
             
             //funções que irão rodar constantemente
             seg.ativa_selecao(lbImgSeg_mdSeg);
-            
         }
     }//GEN-LAST:event_btSegImg_mdSegActionPerformed
 
@@ -384,19 +387,17 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
 
     private void tbCaminho_mdSegMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbCaminho_mdSegMouseClicked
       
-        function.tratamento_de_erro_table(tbCaminho_mdSeg);
-        
-        String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
-        
-        BufferedImage image_buff = null;
-        
-        try {
-            image_buff = ImageIO.read(new File(caminho));
-        } catch (IOException ex) {
-            Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(Level.SEVERE, null, ex);
+        if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+            try {
+                String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
+                label_image = ImageIO.read(new File(caminho));
+                function.setarImageLabel(lbImgOri_mdSeg, label_image); 
+            } catch (IOException ex) {
+                System.out.println("Erro ao setar imagem");
+                Logger.getLogger(ModuleSegmantation_UI.class.getName()).log(Level.SEVERE, null, ex);
+            }   
         }
         
-        function.setarImageLabel(lbImgOri_mdSeg, image_buff);
     }//GEN-LAST:event_tbCaminho_mdSegMouseClicked
 
     private void btSalImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalImg_mdSegActionPerformed
@@ -423,14 +424,17 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
         
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
             String caminho_remove = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
-            int cont = 0;
-            for(String key : function.file_list){
+            
+            Iterator<String> it = function.file_list.iterator();
+                    
+            while(it.hasNext()){
+                String key = it.next();
                 if(key.equals(caminho_remove)){
                     System.out.println("cancela da arraylist");
+                    model_table.removeRow(tbCaminho_mdSeg.getSelectedRow());
                     function.file_list.remove(key);
                     System.out.println(""+function.file_list.toString());
                 }
-                cont++;
             }
         }
     }//GEN-LAST:event_btTirIma_mdSegActionPerformed
@@ -445,7 +449,7 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
             
             function.setarImageLabel(lbImgSeg_mdSeg, image_buff);
 
-            JLTotReg_mdSeg.setText("Total de regioes: "+seg.getTotalregioes());
+            JLTotReg_mdSeg.setText("Total de regioes: "+seg.getSegmented_regions());
             
             jPb_mdSeg.setValue(100);
         }
@@ -453,12 +457,12 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
 
     private void btAddNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddNotesActionPerformed
         
-        if(function.tratamento_de_erro_list(jTfNotes, ativar_anotacao)){
-            if(lbImgSeg_mdSeg.getIcon().equals(seg.getImageicon_image_clareada())){
+        if(function.tratamento_de_erro_list(jTfNotes, ativar_anotacao, seg.getMultiple_selected_regions(), rotuloDAO)){
+            if(lbImgSeg_mdSeg.getIcon().equals(seg.getImage_lightened_icon())){
                 String textToNote = jTfNotes.getText();
                 function.list_list.add(textToNote);
                 model_list.add(model_list.getSize(), textToNote);
-                seg.module_notes();
+                rotuloDAO.adicionar(new Rotulo(model_list.getSize(), textToNote, seg.getMultiple_selected_regions(), seg.getImage_lightened()));
                 System.out.println(function.list_list.toString());
             } else {
                 JOptionPane.showMessageDialog(null, "Rotulo nao selecionado!");
@@ -468,6 +472,18 @@ public class ModuleSegmantation_UI extends javax.swing.JDialog {
         jTfNotes.setText("");
         
     }//GEN-LAST:event_btAddNotesActionPerformed
+
+    private void jList_notesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList_notesMouseClicked
+        
+        if(jList_notes.getSelectedIndex() < 0){
+            System.out.println("Nenhuma palavra selecionada");
+        } else {
+            String palavra_selecionada = model_list.getElementAt(jList_notes.getSelectedIndex()).toString();
+            System.out.println("Palavra: "+palavra_selecionada+" | indice da palavra na lista:"+jList_notes.getSelectedIndex()+" ArrayList:"+rotuloDAO.getRmapofName(palavra_selecionada));
+            lbImgSeg_mdSeg.setIcon(new ImageIcon(rotuloDAO.getBufImageofName(palavra_selecionada)));
+        }
+        
+    }//GEN-LAST:event_jList_notesMouseClicked
 
     /**
      * @param args the command line arguments
