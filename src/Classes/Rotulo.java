@@ -20,10 +20,10 @@ public class Rotulo {
     private BufferedImage imagme_clareada;
 
     public Rotulo(int index, String nome, ArrayList<Integer> region_map_value, BufferedImage imagem_clareada) {
-        this.index = index;
-        this.nome = nome;
-        this.region_map_value = new ArrayList<Integer>(region_map_value);
-        this.imagme_clareada = imagem_clareada;
+        this.index              = index;
+        this.nome               = nome;
+        this.region_map_value   = new ArrayList<Integer>(region_map_value);
+        this.imagme_clareada    = imagem_clareada;
         System.out.println("index "+index+" nome: "+nome+" region_map_value: "+region_map_value);
     }
 

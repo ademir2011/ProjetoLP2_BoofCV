@@ -7,19 +7,18 @@ package Funcoes;
 
 import Classes.Rotulo;
 import DAO.RotuloDAO;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Method;
 
 /**
  *
@@ -113,10 +112,6 @@ public class Functions_UI {
         int y = lbImgSeg_mdX.getSize().height;
         
         return (new ImageIcon(image_buff.getScaledInstance(x, y, image_buff.SCALE_SMOOTH)) );
-    }
-    
-    public void setarImageLabel(JLabel label, BufferedImage image_buff){
-        label.setIcon(new ImageIcon(image_buff));
     }
     
 }

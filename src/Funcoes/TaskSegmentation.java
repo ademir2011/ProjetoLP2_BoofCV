@@ -9,6 +9,7 @@ import boofcv.io.image.UtilImageIO;
 import br.ufrn.imd.lp2.imagesegmentation.ImageInformation;
 import br.ufrn.imd.lp2.imagesegmentation.ImageSegmentation;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import org.imgscalr.Scalr;
 
 /**
  *
@@ -40,6 +42,7 @@ public class TaskSegmentation {
     private int[] shades_of_gray;
     Random random;
     private int mapped_region_selected;
+    BufferedImage scaled_image;
 
     ArrayList<Integer> multiple_selected_regions = new ArrayList<Integer>();
     
@@ -53,6 +56,7 @@ public class TaskSegmentation {
         this.segmented_regions   = 0;
         random              = new Random();
         mapped_region_selected  = 0;
+        
     }
     
     /**
@@ -78,16 +82,13 @@ public class TaskSegmentation {
         this.blurlevel          = blurlevel;
         this.colorradius        = colorradius;
         this.minsize            = minsize;
-        this.segmented_image    = UtilImageIO.loadImage(caminho);
-        
-        System.out.println("CAM: "+caminho);
         
         try {
             
-            seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
-            segmented_regions   = seg.getTotalRegions();
-            mapped_regions      = seg.getSegmentedImageMap();
-            segmented_image     = seg.getRegionMarkedImage();
+            this.seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
+            this.segmented_regions   = seg.getTotalRegions();
+            this.mapped_regions      = seg.getSegmentedImageMap();
+            this.segmented_image     = seg.getRegionMarkedImage();
             
             System.out.println("Regiões segmentadas: " + segmented_regions);
 
@@ -95,9 +96,8 @@ public class TaskSegmentation {
             JOptionPane.showMessageDialog(null, "Erro ao segmentar imagem" + e);
         }
         
-        image_lightened = seg.getRegionMarkedImage();
         multiple_selected_regions.clear();
-        
+        //scaled_image = Scalr.resize(segmented_image, Scalr.Method.ULTRA_QUALITY, 400, 400);
         return segmented_image;
     }
     
@@ -118,15 +118,12 @@ public class TaskSegmentation {
         this.labeled_image  = UtilImageIO.loadImage(caminho);
         
         try {
-
             
             seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
             labeled_image       = seg.getRegionMarkedImage(); // Imagem segmentada
             segmented_regions   = seg.getTotalRegions();
             mapped_regions      = seg.getSegmentedImageMap(); // retorna mapa de regioes [0_N] da segmentacao
             shades_of_gray      = new int[segmented_regions];
-            
-            System.out.println("Total de regiões: " + segmented_regions);
             
             for (int i = 0; i < segmented_regions; i++) {
                 shades_of_gray[i] = random.nextInt(255);
@@ -200,21 +197,20 @@ public class TaskSegmentation {
     }
     
     public BufferedImage pintar_escuro(int i, int j, BufferedImage bi){
+        
         Color c_origin = new Color(segmented_image.getRGB(j, i));
         Color c_star = new Color(c_origin.getRed()/2, c_origin.getGreen()/2, c_origin.getBlue()/2);
         bi.setRGB(j, i, c_star.getRGB());
         return bi;
     }
     
-    public void clarear_rotulo(JLabel lbImgSeg_mdSeg){
+    public BufferedImage clarear_rotulo(JLabel lbImgSeg_mdSeg){
         
-        int cont = 0;
-        boolean cont2 = false;
+        int cont        = 0;
+        boolean cont2   = false;
         Iterator<Integer> it;
         
-        System.out.println("MultRegMap - Clarear Modulo: "+multiple_selected_regions);
         image_lightened = seg.getRegionMarkedImage();
-        //image_lightened = segmented_image;
         for (int i = 0; i < lbImgSeg_mdSeg.getHeight(); i++) {
             for (int j = 0; j < lbImgSeg_mdSeg.getWidth(); j++) {
                 
@@ -235,19 +231,31 @@ public class TaskSegmentation {
                 
             }
         }
+        System.out.println("Rotulo clareado nas regioes: "+multiple_selected_regions);
         image_lightened_icon = new ImageIcon(image_lightened);
-        lbImgSeg_mdSeg.setIcon(image_lightened_icon);
-        System.out.println("Rotulo clareado | Region Map: "+mapped_region_selected);
+        return image_lightened;
+    }
+    
+    public void clarear_regiao_clicada(int x, int y, JLabel lbImgSeg_mdSeg){
+        selecionar_rotulo(x,y,lbImgSeg_mdSeg);
+        setarImageLabel(lbImgSeg_mdSeg, clarear_rotulo(lbImgSeg_mdSeg));
     }
     
     public void ativa_selecao(JLabel lbImgSeg_mdSeg){
         lbImgSeg_mdSeg.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e){
-                    System.out.println("Imagem selecionala nos pixels: X = "+e.getX()+" e Y = "+e.getY());
-                    selecionar_rotulo(e.getX(),e.getY(),lbImgSeg_mdSeg);
-                    clarear_rotulo(lbImgSeg_mdSeg);
+                    clarear_regiao_clicada(e.getX(),e.getY(),lbImgSeg_mdSeg);
                 }
             });
+    }
+    
+    public void setarImageLabel(JLabel label, BufferedImage image_buff){
+        
+        //BufferedImage scaledImg = Scalr.resize(image_buff, Method.ULTRA_QUALITY, label.getWidth(), label.getHeight());
+        //label.setSize(scaled_image.getWidth(), scaled_image.getHeight());
+        //scaled_image = Scalr.resize(image_buff, Scalr.Method.ULTRA_QUALITY, label.getWidth(), label.getHeight());
+        //label.setIcon(new ImageIcon(scaled_image));
+        label.setIcon(new ImageIcon(image_buff.getScaledInstance(label.getWidth(), label.getHeight(), image_buff.SCALE_SMOOTH)));
     }
     
     public float getBlurlevel() {

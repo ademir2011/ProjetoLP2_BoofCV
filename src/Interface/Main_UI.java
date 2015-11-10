@@ -5,29 +5,11 @@
  */
 package Interface;
 
-import Funcoes.TaskSegmentation;
-import com.sun.javafx.scene.control.SelectedCellsMap;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.List;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.BevelBorder;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -109,9 +91,11 @@ public class Main_UI extends javax.swing.JFrame {
      */
     private void btSegmentar_mdUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSegmentar_mdUIActionPerformed
         ModuleSegmantation_UI mdSeg = new ModuleSegmantation_UI(this, true);
-        mdSeg.setTitle("Segmentacao");
+        
+        mdSeg.setTitle("Smart Parking");
         mdSeg.setLocationRelativeTo(null);
         mdSeg.setResizable(false);
+        //mdSeg.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); 
         mdSeg.setVisible(true);
     }//GEN-LAST:event_btSegmentar_mdUIActionPerformed
 
