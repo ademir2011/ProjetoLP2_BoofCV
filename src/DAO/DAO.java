@@ -9,25 +9,24 @@ import Classes.Rotulo;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author Ademir
  */
-public class RotuloDAO {
+public class DAO {
 
     ArrayList<Rotulo> rotulo_list = new ArrayList<Rotulo>();
+    ArrayList<String> postfixed_list;
     
-    public RotuloDAO() {
+    public DAO() {
     }
     
     public void adicionar(Rotulo rotulo){
         rotulo_list.add(rotulo);
         System.out.println("Rotulo +"   + " ["+rotulo.getIndex()+"]"
                                         + " ["+rotulo.getNome()+"]"
-                                        + " ["+rotulo.getRegion_map_value()+"]"
+                                        + " ["+rotulo.getMultiple_selected_regions()+"]"
                                         + " adicionado ao DAO");
     }
     
@@ -35,11 +34,11 @@ public class RotuloDAO {
         
     }
     
-    public ArrayList<Integer> getRmapofName(String name){
+    public ArrayList<Integer> getRmapbyName(String name){
         for(Rotulo key : rotulo_list){
             if(key.getNome().equals(name)){
-                System.out.println("Region map: "+key.getRegion_map_value()+" encontrada a partir do nome: "+name);
-                return key.getRegion_map_value();
+                System.out.println("Region map: "+key.getMultiple_selected_regions()+" encontrada a partir do nome: "+name);
+                return key.getMultiple_selected_regions();
             }
         }
         
@@ -47,9 +46,9 @@ public class RotuloDAO {
         return null;
     }
     
-    public String getNameofRmap(ArrayList<Integer> regionmap_value){
+    public String getNameofRmap(ArrayList<Integer> multiple_selected_regions){
         for(Rotulo key : rotulo_list){
-            if(key.getRegion_map_value() == regionmap_value){
+            if(key.getMultiple_selected_regions().equals(multiple_selected_regions)){
                 return key.getNome();
             }
         }
@@ -58,7 +57,7 @@ public class RotuloDAO {
         return "";
     }
     
-    public BufferedImage getBufImageofName(String name){
+    public BufferedImage getBufImagebyName(String name){
         for(Rotulo key : rotulo_list){
             if(key.getNome().equals(name)){
                 System.out.println("Imagem clareada encontrada !");
@@ -68,6 +67,24 @@ public class RotuloDAO {
         
         System.out.println("Region_map_value nao encontrada!");
         return null;
+    }
+    
+    public ArrayList searchByPrefix(String prefix){
+        postfixed_list = new ArrayList<String>();
+        for(Rotulo key : rotulo_list){
+            String name = key.getNome();
+            if(name.length() >= prefix.length()){
+                String cut_name = name.substring(0, prefix.length());
+                if(cut_name.equals(prefix)){
+                    postfixed_list.add( name );
+                    //name.substring( prefix.length(), name.length() )
+                }
+            }
+        }
+        if(postfixed_list.isEmpty())
+            return null;
+        else
+            return postfixed_list;
     }
 
     public ArrayList<Rotulo> getRotulo_list() {

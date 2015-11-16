@@ -6,7 +6,7 @@
 package Funcoes;
 
 import Classes.Rotulo;
-import DAO.RotuloDAO;
+import DAO.DAO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -17,8 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Method;
 
 /**
  *
@@ -27,7 +25,6 @@ import org.imgscalr.Scalr.Method;
 public class Functions_UI {
     
     public ArrayList<String> file_list = new ArrayList<String>();
-    public ArrayList<String> list_list = new ArrayList<String>();
     
     public Functions_UI(){
     }
@@ -79,7 +76,7 @@ public class Functions_UI {
         }
     }
     
-    public boolean tratamento_de_erro_list(JTextField jTfNotes, boolean ativar_anotacao, ArrayList multiRM, RotuloDAO rotuloDAO){
+    public boolean tratamento_de_erro_list(JTextField jTfNotes, boolean ativar_anotacao, ArrayList<Integer> multiple_selected_regions, DAO dao){
         
         if(ativar_anotacao == false) {
             JOptionPane.showMessageDialog(null, "Nenhuma imagem segmentada");
@@ -89,16 +86,17 @@ public class Functions_UI {
             return false;
         }
         
-        for(String key : list_list){
-            if(jTfNotes.getText().equals(key)){
+        for(Rotulo key : dao.getRotulo_list()){
+            if(jTfNotes.getText().equals(key.getNome())){
                 JOptionPane.showMessageDialog(null, "Nome ja inserido");
                 return false;
             }
         }
         
-        for (Rotulo key : rotuloDAO.getRotulo_list()) {
-            if(key.getRegion_map_value().equals(multiRM)){
-                JOptionPane.showMessageDialog(null, "Regioes já selecionadas com o nome"+key.getNome());
+        for (Rotulo key : dao.getRotulo_list()) {
+            System.out.println("TESTE: "+multiple_selected_regions);
+            if(key.getMultiple_selected_regions().equals(multiple_selected_regions)){
+                JOptionPane.showMessageDialog(null, "Regioes já selecionadas com o nome: "+key.getNome());
                 return false;
             }
         }
@@ -112,6 +110,10 @@ public class Functions_UI {
         int y = lbImgSeg_mdX.getSize().height;
         
         return (new ImageIcon(image_buff.getScaledInstance(x, y, image_buff.SCALE_SMOOTH)) );
+    }
+    
+    public void setarImageLabel(JLabel label, BufferedImage image_buff){
+        label.setIcon(new ImageIcon(image_buff.getScaledInstance(label.getWidth(), label.getHeight(), image_buff.SCALE_SMOOTH)));
     }
     
 }

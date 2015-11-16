@@ -44,18 +44,19 @@ public class TaskSegmentation {
     private int mapped_region_selected;
     BufferedImage scaled_image;
 
-    ArrayList<Integer> multiple_selected_regions = new ArrayList<Integer>();
+    ArrayList<Integer> multiple_selected_regions; 
     
     /**
      * Inicilização da segmentação com valores default
      */
     public TaskSegmentation() {
-        this.blurlevel      = 0.99f;
-        this.colorradius    = 40f;
-        this.minsize        = 1000f;
-        this.segmented_regions   = 0;
-        random              = new Random();
+        this.blurlevel          = 0.99f;
+        this.colorradius        = 40f;
+        this.minsize            = 1000f;
+        this.segmented_regions  = 0;
+        random                  = new Random();
         mapped_region_selected  = 0;
+        multiple_selected_regions = new ArrayList<Integer>();
         
     }
     
@@ -238,7 +239,7 @@ public class TaskSegmentation {
     
     public void clarear_regiao_clicada(int x, int y, JLabel lbImgSeg_mdSeg){
         selecionar_rotulo(x,y,lbImgSeg_mdSeg);
-        setarImageLabel(lbImgSeg_mdSeg, clarear_rotulo(lbImgSeg_mdSeg));
+        lbImgSeg_mdSeg.setIcon(new ImageIcon( clarear_rotulo(lbImgSeg_mdSeg) ) );
     }
     
     public void ativa_selecao(JLabel lbImgSeg_mdSeg){
@@ -247,15 +248,6 @@ public class TaskSegmentation {
                     clarear_regiao_clicada(e.getX(),e.getY(),lbImgSeg_mdSeg);
                 }
             });
-    }
-    
-    public void setarImageLabel(JLabel label, BufferedImage image_buff){
-        
-        //BufferedImage scaledImg = Scalr.resize(image_buff, Method.ULTRA_QUALITY, label.getWidth(), label.getHeight());
-        //label.setSize(scaled_image.getWidth(), scaled_image.getHeight());
-        //scaled_image = Scalr.resize(image_buff, Scalr.Method.ULTRA_QUALITY, label.getWidth(), label.getHeight());
-        //label.setIcon(new ImageIcon(scaled_image));
-        label.setIcon(new ImageIcon(image_buff.getScaledInstance(label.getWidth(), label.getHeight(), image_buff.SCALE_SMOOTH)));
     }
     
     public float getBlurlevel() {
