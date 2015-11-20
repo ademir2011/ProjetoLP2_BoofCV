@@ -18,37 +18,35 @@ public class Rotulo {
     private float blurlevel;
     private float colorradius;
     private float minsize;
-    private String nome;
+    private String nome_rotulo;
+    private String nome_imagem;
     private ArrayList<Integer> multiple_selected_regions;
     private BufferedImage origin_image;
     private BufferedImage image_clareada;
 
-    public Rotulo(int index, float blurlevel, float colorradius, float minsize, String nome, ArrayList<Integer> multiple_selected_regions, BufferedImage origin_image, BufferedImage imagem_clareada) {
+    public Rotulo(int index, float blurlevel, float colorradius, float minsize, String nome_rotulo, ArrayList<Integer> multiple_selected_regions, BufferedImage origin_image, BufferedImage imagem_clareada, String nome_imagem) {
         this.index                      = index;
         this.blurlevel                  = blurlevel;
         this.colorradius                = colorradius;
         this.minsize                    = minsize;
-        this.nome                       = nome;
+        this.nome_rotulo                = nome_rotulo;
         this.multiple_selected_regions  = new ArrayList<Integer>(multiple_selected_regions);
         this.image_clareada             = imagem_clareada;
-        System.out.println("index "+index+" nome: "+nome+" blurlevel:"+blurlevel+" colorradius:"+colorradius+" minsize:"+minsize+"multiple_selected_regions: "+multiple_selected_regions);
+        this.nome_imagem                = nome_imagem;
+        System.out.println("index "+index+" nome rotulo: "+nome_rotulo+" blurlevel:"+blurlevel+" colorradius:"+colorradius+" minsize:"+minsize+"multiple_selected_regions: "+multiple_selected_regions+" nome imagem:"+nome_imagem);
     }
 
-    public String getNome() {
-        return nome;
+    public String getNome_rotulo() {
+        return nome_rotulo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome_rotulo(String nome_rotulo) {
+        this.nome_rotulo = nome_rotulo;
     }
 
     public ArrayList<Integer> getMultiple_selected_regions() {
         return multiple_selected_regions;
     }
-/*
-    public void setMultiple_selected_regions(ArrayList<Integer> multiple_selected_regions) {
-        this.multiple_selected_regions = multiple_selected_regions;
-    }*/
 
     public int getIndex() {
         return index;
@@ -60,10 +58,6 @@ public class Rotulo {
 
     public BufferedImage getImagme_clareada() {
         return image_clareada;
-    }
-
-    public void setImagme_clareada(BufferedImage imagme_clareada) {
-        this.image_clareada = imagme_clareada;
     }
 
     public float getBlurlevel() {
@@ -105,6 +99,13 @@ public class Rotulo {
     public void setImage_clareada(BufferedImage image_clareada) {
         this.image_clareada = image_clareada;
     }
-    
+
+    public String getNome_imagem() {
+        return nome_imagem;
+    }
+
+    public void setNome_imagem(String nome_imagem) {
+        this.nome_imagem = nome_imagem;
+    }
     
 }

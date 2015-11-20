@@ -43,7 +43,9 @@ public class TaskSegmentation {
     Random random;
     private int mapped_region_selected;
     BufferedImage scaled_image;
-
+    private String nome_imagem;
+    Functions_UI functions;
+    
     ArrayList<Integer> multiple_selected_regions; 
     
     /**
@@ -237,15 +239,12 @@ public class TaskSegmentation {
         return image_lightened;
     }
     
-    public void clarear_regiao_clicada(int x, int y, JLabel lbImgSeg_mdSeg){
-        selecionar_rotulo(x,y,lbImgSeg_mdSeg);
-        lbImgSeg_mdSeg.setIcon(new ImageIcon( clarear_rotulo(lbImgSeg_mdSeg) ) );
-    }
-    
     public void ativa_selecao(JLabel lbImgSeg_mdSeg){
         lbImgSeg_mdSeg.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e){
-                    clarear_regiao_clicada(e.getX(),e.getY(),lbImgSeg_mdSeg);
+                    selecionar_rotulo(e.getX(), e.getY(),lbImgSeg_mdSeg);
+                    BufferedImage bi = clarear_rotulo(lbImgSeg_mdSeg);
+                    lbImgSeg_mdSeg.setIcon( new ImageIcon(bi) );
                 }
             });
     }
@@ -368,6 +367,22 @@ public class TaskSegmentation {
 
     public void setMultiple_selected_regions(ArrayList<Integer> multiple_selected_regions) {
         this.multiple_selected_regions = multiple_selected_regions;
+    }
+
+    public BufferedImage getScaled_image() {
+        return scaled_image;
+    }
+
+    public void setScaled_image(BufferedImage scaled_image) {
+        this.scaled_image = scaled_image;
+    }
+
+    public String getNome_imagem() {
+        return nome_imagem;
+    }
+
+    public void setNome_imagem(String nome_imagem) {
+        this.nome_imagem = nome_imagem;
     }
     
     

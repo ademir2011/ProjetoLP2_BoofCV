@@ -24,7 +24,7 @@ public class Main_UI extends javax.swing.JFrame {
      */
     public Main_UI() {
         initComponents();
-        setSize( 600, 400);  
+        setSize( 320, 240);  
         setLocationRelativeTo(null);
     }
 
@@ -40,15 +40,13 @@ public class Main_UI extends javax.swing.JFrame {
         jPanel1_buttons = new javax.swing.JPanel();
         btSegmentar_mdUI = new javax.swing.JButton();
         btSair_mdUI = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new java.awt.GridLayout(2, 0));
 
         jPanel1_buttons.setLayout(new java.awt.GridLayout(1, 2));
 
-        btSegmentar_mdUI.setText("Segmentar/Modular");
+        btSegmentar_mdUI.setText("Start");
         btSegmentar_mdUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSegmentar_mdUIActionPerformed(evt);
@@ -56,23 +54,15 @@ public class Main_UI extends javax.swing.JFrame {
         });
         jPanel1_buttons.add(btSegmentar_mdUI);
 
+        getContentPane().add(jPanel1_buttons);
+
         btSair_mdUI.setText("Sair");
         btSair_mdUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSair_mdUIActionPerformed(evt);
             }
         });
-        jPanel1_buttons.add(btSair_mdUI);
-
-        getContentPane().add(jPanel1_buttons, java.awt.BorderLayout.CENTER);
-
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
+        getContentPane().add(btSair_mdUI);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -120,9 +110,6 @@ public class Main_UI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSair_mdUI;
     private javax.swing.JButton btSegmentar_mdUI;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1_buttons;
     // End of variables declaration//GEN-END:variables
 }
