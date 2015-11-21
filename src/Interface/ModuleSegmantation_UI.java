@@ -108,6 +108,12 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
                 btAddNotes     = function.change_button(btAddNotes, function.getLight_prmary_color(), function.getPrimary_color());
                 btSaveInfo_mdSeg = function.change_button(btSaveInfo_mdSeg, function.getLight_prmary_color(), function.getPrimary_color());
 
+                JLColRad_mdSeg.setForeground(function.getLight_prmary_color());
+                JLblurlb_mdSeg.setForeground(function.getLight_prmary_color());
+                JLMinSiz_mdSeg.setForeground(function.getLight_prmary_color());
+                JLTotReg_mdSeg.setForeground(function.getLight_prmary_color());
+                
+                
                 //buttons
                 jpButtons_mdSeg.setBackground(function.getLight_prmary_color());
 
@@ -327,11 +333,11 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
         jPImages_mdSegLayout.setHorizontalGroup(
             jPImages_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPImages_mdSegLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
+                .addContainerGap()
                 .addComponent(lbImgOri_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(lbImgSeg_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jPImages_mdSegLayout.setVerticalGroup(
             jPImages_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,7 +402,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
                 .addGroup(jPainel_NotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTfNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btAddNotes))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btSaveInfo_mdSeg)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -438,10 +444,13 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             tbCaminho_mdSeg.getColumnModel().getColumn(0).setResizable(false);
         }
 
+        JLblurlb_mdSeg.setFont(new java.awt.Font("Corbel", 0, 16)); // NOI18N
         JLblurlb_mdSeg.setText("BlurLevel");
 
+        JLTotReg_mdSeg.setFont(new java.awt.Font("Corbel", 0, 16)); // NOI18N
         JLTotReg_mdSeg.setText("Total de Regioes: ");
 
+        JLColRad_mdSeg.setFont(new java.awt.Font("Corbel", 0, 16)); // NOI18N
         JLColRad_mdSeg.setText("ColorRadius");
 
         JSpBluLev_mdSeg.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.99f), Float.valueOf(0.0f), Float.valueOf(2.0f), Float.valueOf(0.01f)));
@@ -453,6 +462,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             }
         });
 
+        JLMinSiz_mdSeg.setFont(new java.awt.Font("Corbel", 0, 16)); // NOI18N
         JLMinSiz_mdSeg.setText("MinSize");
 
         JSpMinSiz_mdSeg.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(1000.0f), Float.valueOf(0.0f), Float.valueOf(1500.0f), Float.valueOf(1.0f)));
@@ -477,12 +487,13 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jpInfos_mdSegLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(JLTotReg_mdSeg)
-                        .addComponent(JLMinSiz_mdSeg)
-                        .addComponent(JLblurlb_mdSeg)
-                        .addComponent(JLColRad_mdSeg))
-                    .addGap(110, 110, 110)
+                    .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(JLTotReg_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                        .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(JLMinSiz_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(JLColRad_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(JLblurlb_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)))
+                    .addGap(18, 18, 18)
                     .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(JSpMinSiz_mdSeg)
                         .addComponent(JSpColRad_mdSeg)
@@ -506,7 +517,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
                     .addGroup(jpInfos_mdSegLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(JLMinSiz_mdSeg)
                         .addComponent(JSpMinSiz_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                     .addComponent(JLTotReg_mdSeg)
                     .addContainerGap()))
         );
@@ -565,7 +576,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jpButtons_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPImages_mdSeg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(JPupd_info_mdSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -672,7 +683,8 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
 
     private void btModImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btModImg_mdSegActionPerformed
         
-
+        ts = new TaskSegmentation();
+        
         if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
             String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
@@ -712,6 +724,8 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             System.out.println(""+nome_imagem);
             ts.setNome_imagem(nome_imagem);
             ts.ativa_selecao(lbImgSeg_mdSeg);
+            JLTotReg_mdSeg.setText("Total de regioes: "+ts.getSegmented_regions());
+
         }
     }//GEN-LAST:event_btSegImg_mdSegActionPerformed
 

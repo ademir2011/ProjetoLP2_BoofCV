@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -71,6 +72,27 @@ public class TaskSegmentation {
         return segmentar_imagem(caminho, this.blurlevel, this.colorradius, this.minsize);
     }
     
+    public void setVariables(String caminho, float blurlevel, float colorradius, float minsize){
+        this.blurlevel          = blurlevel;
+        this.colorradius        = colorradius;
+        this.minsize            = minsize;
+        this.original_image     = UtilImageIO.loadImage(caminho);
+        this.labeled_image      = UtilImageIO.loadImage(caminho);
+    }
+    
+    public void setSeg(String caminho, float blurlevel, float colorradius, float minsize){
+        try {
+            
+            this.seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
+            this.segmented_regions   = seg.getTotalRegions();
+            this.mapped_regions      = seg.getSegmentedImageMap();
+            this.segmented_image     = seg.getRegionMarkedImage();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao segmentar imagem" + e);
+        }
+    }
+    
     /**
      * nesse polimorfismo é setado valores do blurlevel, colorradius e minsize
      * tem a função de segmentar a imagem de acordo com os valores passados
@@ -82,26 +104,35 @@ public class TaskSegmentation {
      */
     public BufferedImage segmentar_imagem(String caminho, float blurlevel, float colorradius, float minsize) {
         
-        this.blurlevel          = blurlevel;
-        this.colorradius        = colorradius;
-        this.minsize            = minsize;
+        setVariables(caminho, blurlevel, colorradius, minsize);
         
-        try {
-            
-            this.seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
-            this.segmented_regions   = seg.getTotalRegions();
-            this.mapped_regions      = seg.getSegmentedImageMap();
-            this.segmented_image     = seg.getRegionMarkedImage();
-            
-            System.out.println("Regiões segmentadas: " + segmented_regions);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao segmentar imagem" + e);
-        }
+        setSeg(caminho, blurlevel, colorradius, minsize);
         
         multiple_selected_regions.clear();
         //scaled_image = Scalr.resize(segmented_image, Scalr.Method.ULTRA_QUALITY, 400, 400);
         return segmented_image;
+    }
+    
+    public int[] getShadowArray(int tam){
+        
+        int[] sv      = new int[tam];
+
+        for (int i = 0; i < tam; i++) {
+            sv[i] = random.nextInt(255);
+        }
+
+        Arrays.sort(sv);
+        System.out.println(Arrays.toString(sv));
+
+        for (int i = 0; i < tam; i++) {
+            for (int j = i+1; j < tam; j++) {
+                if(sv[i] == sv[j]){
+                    System.out.println("existe um valor igual v"+"["+j+"]");
+                    sv[j] = random.nextInt(255);
+                }
+            }
+        }   
+        return sv;
     }
     
     /**
@@ -114,52 +145,21 @@ public class TaskSegmentation {
      */
     public BufferedImage rotular_imagem(String caminho, float blurlevel, float colorradius, float minsize){
         
-        this.blurlevel      = blurlevel;
-        this.colorradius    = colorradius;
-        this.minsize        = minsize;
-        this.original_image = UtilImageIO.loadImage(caminho);
-        this.labeled_image  = UtilImageIO.loadImage(caminho);
-        
-        try {
-            
-            seg                 = ImageSegmentation.performSegmentation(caminho, blurlevel, colorradius, minsize);
-            labeled_image       = seg.getRegionMarkedImage(); // Imagem segmentada
-            segmented_regions   = seg.getTotalRegions();
-            mapped_regions      = seg.getSegmentedImageMap(); // retorna mapa de regioes [0_N] da segmentacao
-            shades_of_gray      = new int[segmented_regions];
-            
-            for (int i = 0; i < segmented_regions; i++) {
-                shades_of_gray[i] = random.nextInt(255);
-            }
-            
-            Arrays.sort(shades_of_gray);
-            System.out.println(Arrays.toString(shades_of_gray));
-            
-            for (int i = 0; i < segmented_regions; i++) {
-                for (int j = i+1; j < segmented_regions; j++) {
-                    if(shades_of_gray[i] == shades_of_gray[j]){
-                        System.out.println("existe um valor igual v"+"["+j+"]");
-                        shades_of_gray[j] = random.nextInt(255);
-                    }
-                }
-            }   
-            
-            Arrays.sort(shades_of_gray);
-            System.out.println("Array final: " + Arrays.toString(shades_of_gray));
-            
-            int cont = 0;
-            for (int i = 0; i < labeled_image.getHeight(); i++) {
-                for (int j = 0; j < labeled_image.getWidth(); j++) {
-                    Color c = new Color(shades_of_gray[mapped_regions[cont]],shades_of_gray[mapped_regions[cont]], shades_of_gray[mapped_regions[cont]]);
-                    labeled_image.setRGB(j, i, c.getRGB());
-                    cont++;
-                }
-            }
+        setVariables(caminho, blurlevel, colorradius, minsize);
+        setSeg(caminho, blurlevel, colorradius, minsize);
+        shades_of_gray = getShadowArray(segmented_regions);
+        Arrays.sort(shades_of_gray);
+        System.out.println("Array final: " + Arrays.toString(shades_of_gray));
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao rotular imagem" + e);
+        int cont = 0;
+        for (int i = 0; i < labeled_image.getHeight(); i++) {
+            for (int j = 0; j < labeled_image.getWidth(); j++) {
+                Color c = new Color(shades_of_gray[mapped_regions[cont]],shades_of_gray[mapped_regions[cont]], shades_of_gray[mapped_regions[cont]]);
+                labeled_image.setRGB(j, i, c.getRGB());
+                cont++;
+            }
         }
-        
+
         return labeled_image;
     }
 
@@ -384,6 +384,13 @@ public class TaskSegmentation {
     public void setNome_imagem(String nome_imagem) {
         this.nome_imagem = nome_imagem;
     }
-    
+
+    public Functions_UI getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(Functions_UI functions) {
+        this.functions = functions;
+    }
     
 }
