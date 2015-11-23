@@ -95,14 +95,6 @@ public class TratamentoDeErros {
             return false;
         }
         
-        for (Rotulo key : dao.getRotulo_list()) {
-            System.out.println("TESTE: "+multiple_selected_regions);
-            if(key.getMultiple_selected_regions().equals(multiple_selected_regions)){
-                JOptionPane.showMessageDialog(null, "Regioes já selecionadas com o nome: "+key.getNome_rotulo());
-                return false;
-            }
-        }
-        
         return true;
     }
 }
