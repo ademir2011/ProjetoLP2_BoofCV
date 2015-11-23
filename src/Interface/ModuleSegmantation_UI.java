@@ -9,6 +9,8 @@ import Classes.Rotulo;
 import DAO.DAO;
 import Funcoes.Functions_UI;
 import Funcoes.TaskSegmentation;
+import Funcoes.TratamentoDeErros;
+import Funcoes.View;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -54,6 +56,8 @@ import static org.imgscalr.Scalr.OP_BRIGHTER;
 public class ModuleSegmantation_UI extends javax.swing.JFrame {
     
     Functions_UI function;
+    TratamentoDeErros tratarerro;
+    View view;
     DefaultTableModel model_table;
     DefaultListModel model_list; 
     TaskSegmentation ts;
@@ -71,8 +75,50 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
     ArrayList<String> temp_list_postfixed;
     
     public void init_face(){
-        getContentPane().setBackground(function.getLight_prmary_color());
-        getContentPane().setForeground(function.getLight_prmary_color());
+        getContentPane().setBackground(view.getLight_prmary_color());
+        getContentPane().setForeground(view.getLight_prmary_color());
+    }
+    
+    public void body_face(){
+        btCarImg_mdSeg = view.change_button(btCarImg_mdSeg);
+        btTirIma_mdSeg = view.change_button(btTirIma_mdSeg);
+        btSegImg_mdSeg = view.change_button(btSegImg_mdSeg);
+        btModImg_mdSeg = view.change_button(btModImg_mdSeg);
+        btSalImg_mdSeg = view.change_button(btSalImg_mdSeg);
+        btVoltar_mdSeg = view.change_button(btVoltar_mdSeg);
+        btAddNotes     = view.change_button(btAddNotes, view.getLight_prmary_color(), view.getPrimary_color());
+        btSaveInfo_mdSeg = view.change_button(btSaveInfo_mdSeg, view.getLight_prmary_color(), view.getPrimary_color());
+
+        JLColRad_mdSeg.setForeground(view.getLight_prmary_color());
+        JLblurlb_mdSeg.setForeground(view.getLight_prmary_color());
+        JLMinSiz_mdSeg.setForeground(view.getLight_prmary_color());
+        JLTotReg_mdSeg.setForeground(view.getLight_prmary_color());
+
+
+        //buttons
+        jpButtons_mdSeg.setBackground(view.getLight_prmary_color());
+
+        //images
+        jPImages_mdSeg.setBackground(view.getPrimary_color());
+
+        //menubar
+        jMenuBar1.setBackground(view.getDark_primary_color()); //
+
+        //table
+        jScrollPane1.setBackground(view.getPrimary_color());
+        jScrollPane1.getViewport().setBackground(view.getPrimary_color());
+        tbCaminho_mdSeg.setBackground(view.getPrimary_color()); 
+        tbCaminho_mdSeg.setForeground(view.getLight_prmary_color());
+
+        //infos
+        JPupd_info_mdSeg.setBackground(view.getPrimary_color());
+        jpInfos_mdSeg.setBackground(view.getPrimary_color());
+        jpInfos_mdSeg.setForeground(view.getText_color());
+
+        jPainel_Notes.setBackground(view.getPrimary_color());
+
+        //
+        jComboBox2.setBackground(view.getLight_prmary_color()); //
     }
     
     public File[] finder( String dirName){
@@ -98,53 +144,16 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
 
             @Override
             public void run() {
+                
                 init_face();
-                btCarImg_mdSeg = function.change_button(btCarImg_mdSeg);
-                btTirIma_mdSeg = function.change_button(btTirIma_mdSeg);
-                btSegImg_mdSeg = function.change_button(btSegImg_mdSeg);
-                btModImg_mdSeg = function.change_button(btModImg_mdSeg);
-                btSalImg_mdSeg = function.change_button(btSalImg_mdSeg);
-                btVoltar_mdSeg = function.change_button(btVoltar_mdSeg);
-                btAddNotes     = function.change_button(btAddNotes, function.getLight_prmary_color(), function.getPrimary_color());
-                btSaveInfo_mdSeg = function.change_button(btSaveInfo_mdSeg, function.getLight_prmary_color(), function.getPrimary_color());
-
-                JLColRad_mdSeg.setForeground(function.getLight_prmary_color());
-                JLblurlb_mdSeg.setForeground(function.getLight_prmary_color());
-                JLMinSiz_mdSeg.setForeground(function.getLight_prmary_color());
-                JLTotReg_mdSeg.setForeground(function.getLight_prmary_color());
+                body_face();
                 
-                
-                //buttons
-                jpButtons_mdSeg.setBackground(function.getLight_prmary_color());
-
-                //images
-                jPImages_mdSeg.setBackground(function.getPrimary_color());
-
-                //menubar
-                jMenuBar1.setBackground(function.getDark_primary_color()); //
-
-                //table
-                jScrollPane1.setBackground(function.getPrimary_color());
-                jScrollPane1.getViewport().setBackground(function.getPrimary_color());
-                tbCaminho_mdSeg.setBackground(function.getPrimary_color()); 
-                tbCaminho_mdSeg.setForeground(function.getLight_prmary_color());
-
-                //infos
-                JPupd_info_mdSeg.setBackground(function.getPrimary_color());
-                jpInfos_mdSeg.setBackground(function.getPrimary_color());
-                jpInfos_mdSeg.setForeground(function.getText_color());
-
-                jPainel_Notes.setBackground(function.getPrimary_color());
-
-                //
-                jComboBox2.setBackground(function.getLight_prmary_color()); //
             }
         });
         
-        getContentPane().revalidate();
-        getContentPane().repaint(); 
-        
         this.function       = new Functions_UI();
+        this.view           = new View();
+        this.tratarerro     = new TratamentoDeErros();
         this.model_table    = (DefaultTableModel) tbCaminho_mdSeg.getModel();
         this.model_list     = new DefaultListModel();
         jList_notes.setModel(model_list);
@@ -585,7 +594,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
     
     private void tbCaminho_mdSegMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbCaminho_mdSegMouseClicked
       
-        if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+        if(tratarerro.tratamento_de_erro_table(tbCaminho_mdSeg)){
             try {
                 String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
                 label_image = ImageIO.read(new File(caminho));
@@ -618,7 +627,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
     private void btAddNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddNotesActionPerformed
         
         
-        if(function.tratamento_de_erro_list(jTfNotes, ativar_anotacao, ts.getMultiple_selected_regions(), dao)){
+        if(tratarerro.tratamento_de_erro_list(jTfNotes, ativar_anotacao, ts.getMultiple_selected_regions(), dao)){
             if(ts.getMultiple_selected_regions().size() > 0){
                 String textToNote = jTfNotes.getText();
                 model_list.add(model_list.getSize(), textToNote);
@@ -683,13 +692,19 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
 
     private void btModImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btModImg_mdSegActionPerformed
         
+        function.pb_execute(50);
+        
         ts = new TaskSegmentation();
         
-        if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+        if(tratarerro.tratamento_de_erro_table(tbCaminho_mdSeg)){
             String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
-            function.setarImageLabel(lbImgSeg_mdSeg, ts.rotular_imagem(caminho, blurlevel, colorradius, minsize));
-
+            new Thread(){
+                public void run(){
+                    function.setarImageLabel(lbImgSeg_mdSeg, ts.rotular_imagem(caminho, blurlevel, colorradius, minsize));
+                }
+            }.start();
+            
             JLTotReg_mdSeg.setText("Total de regioes: "+ts.getSegmented_regions());
 
             
@@ -704,7 +719,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
         
         ts = new TaskSegmentation();
         
-        if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+        if(tratarerro.tratamento_de_erro_table(tbCaminho_mdSeg)){
 
             String caminho = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
@@ -713,6 +728,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             new Thread(){
                 public void run(){
                     function.setarImageLabel(lbImgSeg_mdSeg, ts.segmentar_imagem(caminho, blurlevel, colorradius, minsize) );
+                    JLTotReg_mdSeg.setText("Total de regioes: "+ts.getSegmented_regions());
                 }
             }.start();
             
@@ -724,36 +740,35 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
             System.out.println(""+nome_imagem);
             ts.setNome_imagem(nome_imagem);
             ts.ativa_selecao(lbImgSeg_mdSeg);
-            JLTotReg_mdSeg.setText("Total de regioes: "+ts.getSegmented_regions());
 
         }
     }//GEN-LAST:event_btSegImg_mdSegActionPerformed
 
     private void btTirIma_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTirIma_mdSegActionPerformed
 
-        if(function.tratamento_de_erro_table(tbCaminho_mdSeg)){
+        if(tratarerro.tratamento_de_erro_table(tbCaminho_mdSeg)){
             String caminho_remove = model_table.getValueAt(tbCaminho_mdSeg.getSelectedRow(), 0).toString();
 
-            Iterator<String> it = function.file_list.iterator();
+            Iterator<String> it = tratarerro.file_list.iterator();
 
             while(it.hasNext()){
                 String key = it.next();
                 if(key.equals(caminho_remove)){
                     System.out.println("cancela da arraylist");
                     model_table.removeRow(tbCaminho_mdSeg.getSelectedRow());
-                    function.file_list.remove(key);
-                    System.out.println(""+function.file_list.toString());
+                    tratarerro.file_list.remove(key);
+                    System.out.println(""+tratarerro.file_list.toString());
                 }
             }
         }
     }//GEN-LAST:event_btTirIma_mdSegActionPerformed
 
     private void btCarImg_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCarImg_mdSegActionPerformed
-        if((selectedFile = function.open_filechoose()) != null){
-            if(function.tratamento_de_erro_carregamento(model_table, selectedFile)){
+        if((selectedFile = function.open_filechoose("C:/Users/Ademir/Desktop/Images")) != null){
+            if(tratarerro.tratamento_de_erro_carregamento(model_table, selectedFile)){
                 for(int i = 0; i < selectedFile.length; i++){
-                    function.file_list.add(selectedFile[i].getAbsolutePath());
-                    System.out.println(""+function.file_list);
+                    tratarerro.file_list.add(selectedFile[i].getAbsolutePath());
+                    System.out.println(""+tratarerro.file_list);
                     model_table.addRow(new Object[]{selectedFile[i].getAbsolutePath()});
                 }
             }
