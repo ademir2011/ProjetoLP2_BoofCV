@@ -5,37 +5,24 @@
  */
 package Funcoes;
 
-import Classes.Rotulo;
-import DAO.DAO;
 import Interface.ModuleSegmantation_UI;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *

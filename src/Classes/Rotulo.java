@@ -24,6 +24,19 @@ public class Rotulo {
     private BufferedImage origin_image;
     private BufferedImage image_clareada;
 
+    /**
+     * Recebe as principais informações sobre cada rotulação
+     * @param index valor id - para utilização futura
+     * @param blurlevel - valor de edição da imagem
+     * @param colorradius - valor de edição da imagem
+     * @param minsize - valor de edição da imagem
+     * @param nome_rotulo - nome do rotulo
+     * @param multiple_selected_regions - valores das regioes segmentadas
+     * @param origin_image - imagem original .jpg
+     * @param imagem_clareada - imagem clareada
+     * @param nome_imagem - nome da imagem.jpg
+     */
+    
     public Rotulo(int index, float blurlevel, float colorradius, float minsize, String nome_rotulo, ArrayList<Integer> multiple_selected_regions, BufferedImage origin_image, BufferedImage imagem_clareada, String nome_imagem) {
         this.index                      = index;
         this.blurlevel                  = blurlevel;

@@ -21,7 +21,6 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import org.imgscalr.Scalr;
 
 /**
  *

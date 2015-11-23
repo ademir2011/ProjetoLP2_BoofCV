@@ -8,7 +8,6 @@ package DAO;
 import Classes.Rotulo;
 import Funcoes.Functions_UI;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,8 +23,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Ademir
+ * Class para criação de uma estrutura de armazenamento
+ * @author Ademir e Leonardo
  */
 public class DAO {
 
@@ -41,11 +40,21 @@ public class DAO {
     
     public final String dir_name_root = "DaoTrabalhoLP2";
     
+    /**
+     * Criar diretorio principal onde vai conter as imagens
+     * @throws IOException 
+     */
+    
     public DAO() throws IOException {
             
         create_diretorio("C:\\"+dir_name_root);
             
     }
+    
+    /**
+     * Cria um diretório dado um caminho
+     * @param dir_path caminho onde será criado o diretório
+     */
     
     public void create_diretorio(String dir_path){
         try {
@@ -55,6 +64,12 @@ public class DAO {
         }  
     }
     
+    /**
+     * verifica a esxistencia de uma pasta dado seu caminho
+     * @param dir_path caminho da possível pasta
+     * @return retorna true a pasta existir e false caso contrário
+     */
+    
     public boolean directoryExist(String dir_path){
         if ( new File(dir_path).exists() ) { 
             return true;
@@ -63,7 +78,17 @@ public class DAO {
         } 
     }
     
+    /**
+     * Adiciona o objeto rotulo no banco, na pasta principal. 
+     * Primeiro se faz uma verificação se já existe o diretório, se sim uma mensagem é exibida
+     * caso contrário será criada uma imagem com o nome do rutulo.
+     * Após a criação do diretório é adicionado a imagem segmentada assim como o arquivo
+     * txt com as informações básicas da imagem.
+     * @param rotulo 
+     */
+    
     public void adicionar(Rotulo rotulo) {
+        
         rotulo_list.add(rotulo);
           
         System.out.println("Rotulo +"   + " ["+rotulo.getIndex()+"]"
@@ -88,23 +113,35 @@ public class DAO {
 
             arq_write.close();
         } catch (IOException ex) {
+            
             Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
     }
     
+    /**
+     * adiciona rotulo a lista de rotulos temporarios
+     * @param rotulo objeto rotulo
+     */
+    
     public void adicionar_temp(Rotulo rotulo){
         rotulo_temp_list.add(rotulo);
     }
+    
+    /**
+     * Remove todos os rótulos temporários
+     */
     
     public void remove_temp(){
         rotulo_temp_list.clear();
     }
     
-    public void remover(){
-        
-    }
+    /**
+     * retorna todas as regioes marcadas a partir do nome
+     * @param name nome setado pelo usuário
+     * @return já informado acima
+     */
     
     public ArrayList<Integer> getRmapbyName(String name){
         for(Rotulo key : rotulo_list){
@@ -118,6 +155,12 @@ public class DAO {
         return null;
     }
     
+    /**
+     * método para procurar o nome a partir de multiplos valores selecionados
+     * @param multiple_selected_regions arraylist de valores
+     * @return retorna uma srting com o nome achado
+     */
+    
     public String getNameofRmap(ArrayList<Integer> multiple_selected_regions){
         for(Rotulo key : rotulo_list){
             if(key.getMultiple_selected_regions().equals(multiple_selected_regions)){
@@ -129,14 +172,32 @@ public class DAO {
         return "";
     }
     
-    public BufferedImage getBufImagebyName(String rotulo_temp, String name) throws IOException{
+    /**
+     * procura uma imagem a partir do nome dam esma
+     * @param rotulo_name nome do rotulo
+     * @param name nome da imagem
+     * @return retorna a imagem achada
+     * @throws IOException 
+     */
+    
+    public BufferedImage getBufImagebyName(String rotulo_name, String image_name) throws IOException{
         
-        File file = new File("C:\\"+dir_name_root+"\\"+rotulo_temp+"\\"+name+".jpg");
+        File file = new File("C:\\"+dir_name_root+"\\"+rotulo_name+"\\"+image_name+".jpg");
         
         BufferedImage bi = ImageIO.read(file);
         
         return bi;
     }
+    
+    /**
+     * procura por todos os rotulos que comecem com o prefixo
+     * setado. O método abaixo varre toda a pasta onde são armazenadas as subpastas
+     * com informação e imagem de cada rótulo e analisa o nome se é igual ao prefixo setado. Caso encontre
+     * armazena num arraylist chamado postfixed_list. Além disse é feitas certas verificações caso 
+     * o prefixo seja vazio
+     * @param prefix prefixo setado
+     * @return retorna a lista de nomes cujo seja igual ao prefixo
+     */
     
     public ArrayList searchByPrefix(String prefix){
         postfixed_list = new ArrayList<String>();
@@ -165,6 +226,14 @@ public class DAO {
         else
             return postfixed_list;
     }
+    
+    /**
+     * cria um bufferedimage a partir de uma imagem localizado no caminho setado
+     * na variável path
+     * @param path local onde a imagem está armazenada
+     * @return retorna um bufferedimagem da imagem
+     * @throws IOException 
+     */
     
     public BufferedImage createImageByPath(String path) throws IOException{
         File img = new File(path);

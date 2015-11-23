@@ -11,43 +11,26 @@ import Funcoes.Functions_UI;
 import Funcoes.TaskSegmentation;
 import Funcoes.TratamentoDeErros;
 import Funcoes.View;
-import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.EventQueue;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Method;
-import static org.imgscalr.Scalr.OP_ANTIALIAS;
-import static org.imgscalr.Scalr.OP_BRIGHTER;
 
 /**
  *
@@ -80,6 +63,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
     }
     
     public void body_face(){
+       
         btCarImg_mdSeg = view.change_button(btCarImg_mdSeg);
         btTirIma_mdSeg = view.change_button(btTirIma_mdSeg);
         btSegImg_mdSeg = view.change_button(btSegImg_mdSeg);
@@ -101,9 +85,6 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
         //images
         jPImages_mdSeg.setBackground(view.getPrimary_color());
 
-        //menubar
-        jMenuBar1.setBackground(view.getDark_primary_color()); //
-
         //table
         jScrollPane1.setBackground(view.getPrimary_color());
         jScrollPane1.getViewport().setBackground(view.getPrimary_color());
@@ -117,8 +98,6 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
 
         jPainel_Notes.setBackground(view.getPrimary_color());
 
-        //
-        jComboBox2.setBackground(view.getLight_prmary_color()); //
     }
     
     public File[] finder( String dirName){
@@ -168,6 +147,7 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
         }
         
         jComboBox2.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            
             
             public void keyReleased(KeyEvent evt){
                 
@@ -777,12 +757,12 @@ public class ModuleSegmantation_UI extends javax.swing.JFrame {
 
     private void btSaveInfo_mdSegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveInfo_mdSegActionPerformed
         
-        for(Rotulo key : dao.getRotulo_temp_list()){
+        for(Rotulo key : dao.getRotulo_temp_list())
             dao.adicionar(key);
-        }
-        
+     
         dao.remove_temp();
         model_list.removeAllElements();
+        
     }//GEN-LAST:event_btSaveInfo_mdSegActionPerformed
 
     /**
